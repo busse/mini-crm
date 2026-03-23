@@ -2,26 +2,34 @@
 
 Pydantic models for tag request/response validation.
 """
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
-class TagBase(BaseModel):
-    """Base tag fields."""
+class TagCreate(BaseModel):
+    """Fields for creating a tag."""
 
     name: str
     color: str | None = None
 
 
-class TagCreate(TagBase):
-    """Fields for creating a tag."""
+class TagResponse(BaseModel):
+    """Tag response with all fields."""
 
-    pass
-
-
-class TagResponse(TagBase):
-    """Tag response with ID."""
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
+    name: str
+    color: str | None
 
-    class Config:
-        from_attributes = True
+
+class TagListResponse(BaseModel):
+    """List of tags."""
+
+    items: list[TagResponse]
+    total: int
+
+
+class DealTagRequest(BaseModel):
+    """Request to add a tag to a deal."""
+
+    tag_id: int

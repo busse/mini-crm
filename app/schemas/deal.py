@@ -2,27 +2,21 @@
 
 Pydantic models for deal request/response validation.
 """
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel
+
+from pydantic import BaseModel, ConfigDict
 
 
-class DealBase(BaseModel):
-    """Base deal fields."""
-
-    title: str
-    value: Decimal | None = None
-    stage_id: int
-    contact_id: int | None = None
-    company_id: int | None = None
-    expected_close_date: datetime | None = None
-    notes: str | None = None
-
-
-class DealCreate(DealBase):
+class DealCreate(BaseModel):
     """Fields for creating a deal."""
 
-    pass
+    title: str
+    value: Decimal
+    currency: str = "USD"
+    expected_close: date | None = None
+    contact_id: int
+    stage_id: int
 
 
 class DealUpdate(BaseModel):
@@ -30,18 +24,52 @@ class DealUpdate(BaseModel):
 
     title: str | None = None
     value: Decimal | None = None
-    stage_id: int | None = None
+    currency: str | None = None
+    expected_close: date | None = None
     contact_id: int | None = None
-    company_id: int | None = None
-    expected_close_date: datetime | None = None
-    notes: str | None = None
+    stage_id: int | None = None
 
 
-class DealResponse(DealBase):
-    """Deal response with ID and timestamps."""
+class DealStageUpdate(BaseModel):
+    """Fields for updating a deal's stage."""
+
+    stage_id: int
+
+
+class TagResponse(BaseModel):
+    """Tag response."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
-    created_at: datetime
+    name: str
+    color: str | None
 
-    class Config:
-        from_attributes = True
+
+class DealResponse(BaseModel):
+    """Deal response with all fields."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    title: str
+    value: Decimal | None
+    currency: str
+    expected_close: date | None
+    contact_id: int | None
+    contact_name: str | None = None
+    stage_id: int
+    stage_name: str | None = None
+    tags: list[TagResponse] = []
+    activity_count: int = 0
+    created_at: datetime
+    updated_at: datetime
+
+
+class DealListResponse(BaseModel):
+    """Paginated list of deals."""
+
+    items: list[DealResponse]
+    total: int
+    page: int
+    per_page: int

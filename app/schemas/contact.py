@@ -2,25 +2,20 @@
 
 Pydantic models for contact request/response validation.
 """
-from pydantic import BaseModel
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict
 
 
-class ContactBase(BaseModel):
-    """Base contact fields."""
+class ContactCreate(BaseModel):
+    """Fields for creating a contact."""
 
     first_name: str
     last_name: str
-    email: str | None = None
+    email: str
     phone: str | None = None
-    title: str | None = None
+    role: str | None = None
     company_id: int | None = None
-    notes: str | None = None
-
-
-class ContactCreate(ContactBase):
-    """Fields for creating a contact."""
-
-    pass
 
 
 class ContactUpdate(BaseModel):
@@ -30,15 +25,31 @@ class ContactUpdate(BaseModel):
     last_name: str | None = None
     email: str | None = None
     phone: str | None = None
-    title: str | None = None
+    role: str | None = None
     company_id: int | None = None
-    notes: str | None = None
 
 
-class ContactResponse(ContactBase):
-    """Contact response with ID."""
+class ContactResponse(BaseModel):
+    """Contact response with all fields."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
+    first_name: str
+    last_name: str
+    email: str | None
+    phone: str | None
+    role: str | None
+    company_id: int | None
+    company_name: str | None = None
+    created_at: datetime
+    updated_at: datetime
 
-    class Config:
-        from_attributes = True
+
+class ContactListResponse(BaseModel):
+    """Paginated list of contacts."""
+
+    items: list[ContactResponse]
+    total: int
+    page: int
+    per_page: int

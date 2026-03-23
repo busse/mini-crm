@@ -3,30 +3,46 @@
 Pydantic models for activity request/response validation.
 """
 from datetime import datetime
-from pydantic import BaseModel
+from enum import Enum
+
+from pydantic import BaseModel, ConfigDict
 
 
-class ActivityBase(BaseModel):
-    """Base activity fields."""
+class ActivityType(str, Enum):
+    """Valid activity types."""
 
-    type: str  # call, email, meeting, note
-    subject: str
-    description: str | None = None
-    contact_id: int | None = None
-    deal_id: int | None = None
+    call = "call"
+    email = "email"
+    meeting = "meeting"
+    note = "note"
 
 
-class ActivityCreate(ActivityBase):
+class ActivityCreate(BaseModel):
     """Fields for creating an activity."""
 
-    pass
+    type: ActivityType
+    subject: str
+    notes: str | None = None
+    occurred_at: datetime
 
 
-class ActivityResponse(ActivityBase):
-    """Activity response with ID and timestamp."""
+class ActivityResponse(BaseModel):
+    """Activity response with all fields."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
+    type: str
+    subject: str
+    notes: str | None
+    occurred_at: datetime
+    deal_id: int | None
+    contact_id: int | None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+
+class ActivityListResponse(BaseModel):
+    """List of activities."""
+
+    items: list[ActivityResponse]
+    total: int

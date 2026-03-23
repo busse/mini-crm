@@ -13,6 +13,13 @@ from app.database import Base, get_db
 
 # Import all models so they register with Base.metadata
 from app.models.user import User  # noqa: F401
+from app.models.contact import Contact  # noqa: F401
+from app.models.company import Company  # noqa: F401
+from app.models.deal import Deal  # noqa: F401
+from app.models.deal_stage import DealStage  # noqa: F401
+from app.models.tag import Tag  # noqa: F401
+from app.models.deal_tag import DealTag  # noqa: F401
+from app.models.activity import Activity  # noqa: F401
 
 # In-memory SQLite for tests - StaticPool ensures same connection is reused
 SQLALCHEMY_TEST_DATABASE_URL = "sqlite:///:memory:"
