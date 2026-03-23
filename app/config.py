@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     """Application settings."""
 
     database_url: str = "sqlite:///data/crm.db"
-    secret_key: str = "change-me-in-production"
+    secret_key: str = "dev-secret-key-change-me"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
 
