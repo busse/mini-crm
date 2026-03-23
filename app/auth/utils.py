@@ -2,26 +2,46 @@
 
 JWT token creation/validation and password hashing helpers.
 """
-from passlib.context import CryptContext
+from datetime import datetime, timedelta, timezone
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
+from jose import JWTError, jwt
+
+from app.config import settings
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(
+        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
+    )
 
 
-def get_password_hash(password: str) -> str:
+def hash_password(password: str) -> str:
     """Hash a password for storage."""
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def create_access_token(data: dict) -> str:
-    """Create a JWT access token."""
-    pass
+    """Create a JWT access token with 60-minute expiry."""
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=60)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(
+        to_encode, settings.secret_key, algorithm=settings.algorithm
+    )
+    return encoded_jwt
 
 
-def decode_access_token(token: str) -> dict:
-    """Decode and validate a JWT access token."""
-    pass
+def decode_access_token(token: str) -> dict | None:
+    """Decode and validate a JWT access token.
+
+    Returns the payload dict if valid, None if invalid or expired.
+    """
+    try:
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
+        return payload
+    except JWTError:
+        return None
