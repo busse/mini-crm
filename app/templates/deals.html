@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Deals - Mini CRM{% endblock %}
+
+{% block content %}
+<h1>Deals</h1>
+
+<figure>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Value</th>
+                <th>Stage</th>
+                <th>Contact</th>
+                <th>Activities</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deal in deals %}
+            <tr>
+                <td><a href="/deals/{{ deal.id }}">{{ deal.title }}</a></td>
+                <td>{{ deal.currency }} {{ deal.value }}</td>
+                <td>{{ deal.stage_name or '-' }}</td>
+                <td>{{ deal.contact_name or '-' }}</td>
+                <td>{{ deal.activity_count }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">No deals found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</figure>
+
+{% if total_pages > 1 %}
+<nav>
+    <ul>
+        {% if page > 1 %}
+        <li><a href="/deals?page={{ page - 1 }}">&laquo; Previous</a></li>
+        {% else %}
+        <li><span class="secondary">&laquo; Previous</span></li>
+        {% endif %}
+
+        <li><span>Page {{ page }} of {{ total_pages }}</span></li>
+
+        {% if page < total_pages %}
+        <li><a href="/deals?page={{ page + 1 }}">Next &raquo;</a></li>
+        {% else %}
+        <li><span class="secondary">Next &raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

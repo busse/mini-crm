@@ -4,8 +4,53 @@
 
 {% block content %}
 <h1>Contacts</h1>
-<!-- Contact list with search/filter placeholder -->
-<div class="contact-list">
-    <!-- Contacts rendered here -->
-</div>
+
+<figure>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Deals</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.first_name }} {{ contact.last_name }}</td>
+                <td>{{ contact.email or '-' }}</td>
+                <td>{{ contact.company_name or '-' }}</td>
+                <td>{{ contact.role or '-' }}</td>
+                <td><a href="/contacts/{{ contact.id }}/deals">{{ contact.deal_count }} deal(s)</a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">No contacts found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</figure>
+
+{% if total_pages > 1 %}
+<nav>
+    <ul>
+        {% if page > 1 %}
+        <li><a href="/contacts?page={{ page - 1 }}">&laquo; Previous</a></li>
+        {% else %}
+        <li><span class="secondary">&laquo; Previous</span></li>
+        {% endif %}
+
+        <li><span>Page {{ page }} of {{ total_pages }}</span></li>
+
+        {% if page < total_pages %}
+        <li><a href="/contacts?page={{ page + 1 }}">Next &raquo;</a></li>
+        {% else %}
+        <li><span class="secondary">Next &raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}

@@ -1,11 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Deal Details - Mini CRM{% endblock %}
+{% block title %}{% if deal %}{{ deal.title }} - Mini CRM{% else %}Deal Not Found - Mini CRM{% endif %}{% endblock %}
 
 {% block content %}
-<h1>Deal Details</h1>
-<!-- Single deal view with activities placeholder -->
-<div class="deal-detail">
-    <!-- Deal info, contact, activities rendered here -->
+{% if deal %}
+<hgroup>
+    <h1>{{ deal.title }}</h1>
+    <p>{{ deal.stage_name }}</p>
+</hgroup>
+
+<div class="grid">
+    <article>
+        <header>Deal Information</header>
+        <dl>
+            <dt>Value</dt>
+            <dd>{{ deal.currency }} {{ deal.value }}</dd>
+
+            <dt>Contact</dt>
+            <dd>{{ deal.contact_name or 'Unassigned' }}</dd>
+
+            <dt>Expected Close</dt>
+            <dd>{{ deal.expected_close or 'Not set' }}</dd>
+
+            <dt>Created</dt>
+            <dd>{{ deal.created_at.strftime('%Y-%m-%d') }}</dd>
+        </dl>
+
+        {% if deal.tags %}
+        <footer>
+            {% for tag in deal.tags %}
+            <span class="tag" style="background-color: {{ tag.color or '#6c757d' }}; color: white; padding: 0.2rem 0.5rem; border-radius: 0.25rem; margin-right: 0.25rem; font-size: 0.85rem;">
+                {{ tag.name }}
+            </span>
+            {% endfor %}
+        </footer>
+        {% endif %}
+    </article>
+
+    <article>
+        <header>Activity Timeline</header>
+        {% if activities %}
+        <ul class="activity-timeline">
+            {% for activity in activities %}
+            <li>
+                <strong>{{ activity.type | capitalize }}</strong>: {{ activity.subject }}
+                <br>
+                <small>{{ activity.occurred_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                {% if activity.notes %}
+                <p><small>{{ activity.notes }}</small></p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No activities recorded.</p>
+        {% endif %}
+    </article>
 </div>
+
+<a href="/deals" role="button" class="secondary">&larr; Back to Deals</a>
+{% else %}
+<article>
+    <h1>Deal Not Found</h1>
+    <p>The deal you're looking for doesn't exist.</p>
+    <a href="/deals" role="button">&larr; Back to Deals</a>
+</article>
+{% endif %}
 {% endblock %}

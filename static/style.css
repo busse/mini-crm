@@ -1,13 +1,30 @@
-/* Mini CRM Styles */
+/* Mini CRM - Minimal Pico CSS overrides */
 
-* {
-    box-sizing: border-box;
+/* Navigation tweaks */
+nav {
+    background-color: var(--pico-card-background-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-body {
-    font-family: system-ui, -apple-system, sans-serif;
-    margin: 0;
-    padding: 0;
+/* Tag badges */
+.tag {
+    display: inline-block;
+    font-weight: 500;
 }
 
-/* Add styles as needed */
+/* Activity timeline */
+.activity-timeline {
+    list-style: none;
+    padding-left: 0;
+}
+
+.activity-timeline li {
+    border-left: 2px solid var(--pico-primary);
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Pagination nav */
+nav ul {
+    justify-content: center;
+}
