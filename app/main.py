@@ -14,6 +14,7 @@ from app.routers.companies import router as companies_router
 from app.routers.deals import router as deals_router
 from app.routers.activities import router as activities_router
 from app.routers.tags import router as tags_router
+from app.routers.pipeline import router as pipeline_router
 from app.database import get_db
 from app.models.contact import Contact
 from app.models.deal import Deal
@@ -32,6 +33,7 @@ app.include_router(companies_router)
 app.include_router(deals_router)
 app.include_router(activities_router)
 app.include_router(tags_router)
+app.include_router(pipeline_router)
 
 
 @app.get("/health")
