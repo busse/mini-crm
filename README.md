@@ -4,9 +4,12 @@ A small CRM application built with Python, FastAPI, and SQLite.
 
 ## Quick Start
 
+Requires **Python 3.10+**
+
 ```bash
 git clone <repo-url> && cd mini-crm
-python -m venv .venv && source .venv/bin/activate
+python3 scripts/check_python.py          # verify Python version
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 alembic upgrade head
 python scripts/seed.py
@@ -52,3 +55,19 @@ data/               # SQLite database (crm.db)
 | Pipeline   | `GET /api/pipeline/stages`                     |
 
 All `/api/*` endpoints require JWT authentication via `Authorization: Bearer <token>`.
+
+## Troubleshooting
+
+**Wrong Python version?**
+Run `python3 --version`. You need 3.10 or newer.
+
+- **macOS (Homebrew):** `brew install python@3.12` then use `python3.12 -m venv .venv`
+- **Ubuntu / Debian:** `sudo apt install python3.12 python3.12-venv`
+- **pyenv:** `pyenv install 3.12 && pyenv local 3.12`
+- **Windows:** Download from https://www.python.org/downloads/
+
+**`pip install` fails with "requires-python"?**
+Your Python is too old. See above.
+
+**`ModuleNotFoundError: No module named 'venv'`?**
+On Ubuntu/Debian: `sudo apt install python3.X-venv` (replace `3.X` with your version).

@@ -17,6 +17,12 @@ A small CRM application built with Python, FastAPI, and SQLite.
 - SQLite database at `data/crm.db`
 - Templates in `app/templates/`, static files in `static/`
 
+## Python Version
+
+- Version floor is **3.10** — do NOT use 3.11+ features (match statements, StrEnum, tomllib, etc.)
+- `X | Y` union syntax (PEP 604) is fine — it works on 3.10+
+- Do NOT add `from __future__ import annotations` — it breaks Pydantic v2 runtime validation
+
 ## Conventions
 
 - All API routes are prefixed with `/api/` except auth (`/auth/`)
